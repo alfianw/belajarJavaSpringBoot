@@ -5,6 +5,7 @@
 package com.maw.belajar.repository;
 
 import com.maw.belajar.models.Suplier;
+import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -13,4 +14,11 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface SuplierRepo extends CrudRepository<Suplier, Long>{
     
+    Suplier findByEmail(String email);
+    
+    List<Suplier> findByNameContainsOrderByIdDesc(String name);
+    
+    List<Suplier> findByNameStartingWith(String prefix);
+    
+    List<Suplier> findByNameContainsOrEmailContains(String name, String email);
 }

@@ -8,6 +8,7 @@ import com.maw.belajar.models.Product;
 import com.maw.belajar.models.Suplier;
 import com.maw.belajar.repository.ProductRepo;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepo productRepo;
+    
+    @Autowired
+    private SuplierService suplierService;
 
     public Product create(Product product) {
         return productRepo.save(product);
@@ -50,14 +54,30 @@ public class ProductService {
 
     public void addSupplier(Suplier suplier, Long productId) {
         Product product = findById(productId);
-        if(product == null){
-        throw  new RuntimeException("Product with ID" + productId+ " not found");
-    }
+        if (product == null) {
+            throw new RuntimeException("Product with ID" + productId + " not found");
+        }
         product.getSupliers().add(suplier);
         create(product);
     }
 
-//    public Product findByProductName(String name){
-//        return productRepo.findProductByName(name);
-//    }
+    public Product findByProductName(String name) {
+        return productRepo.findProductByName(name);
+    }
+
+    public Iterable<Product> findProduct(String name) {
+        return productRepo.findProduct("%" + name + "%");
+    }
+
+    public Iterable<Product> findProductByCategory(Long categoryId) {
+        return productRepo.findProductByCategory(categoryId);
+    }
+
+    public List<Product> findProductBySuplier(Long suplierId) {
+        Suplier suplier = suplierService.findById(suplierId);
+        if(suplier == null){
+            return new ArrayList<Product>();
+        }
+        return productRepo.findProductBySupplier(suplier);
+    }
 }

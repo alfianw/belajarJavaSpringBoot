@@ -25,12 +25,13 @@ import java.util.Set;
  *
  * @author Hp
  */
+
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//         property = "id"
+//)
 @Entity
 @Table(name = "tbl_product")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-         property = "id"
-)
 public class Product implements Serializable{
     
     @Id
@@ -50,7 +51,7 @@ public class Product implements Serializable{
     @ManyToOne
     private Category category;
     
-//    @JsonManagedReference
+    @JsonManagedReference
     @ManyToMany
     @JoinTable(name = "tbl_product_suplier", 
             joinColumns = @JoinColumn(name = "product_id"),

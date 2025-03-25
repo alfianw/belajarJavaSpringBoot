@@ -10,6 +10,7 @@ import com.maw.belajar.models.Product;
 import com.maw.belajar.models.Suplier;
 import com.maw.belajar.service.ProductService;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,14 +72,13 @@ public class ProductController {
         responseData.getMessage().add("Success");
         responseData.setPayload(productService.create(product));
         return ResponseEntity.ok(responseData);
-        
+
     }
-    
+
 //    @GetMapping
 //    public  Iterable<Product> findByName(String name){
 //     return productService.findByName(name);
 //    }
-
     @GetMapping
     public Iterable<Product> findAll() {
         return productService.findAll();
@@ -93,13 +93,29 @@ public class ProductController {
     public void delete(@PathVariable("id") Long id) {
         productService.delete(id);
     }
-    
-//    @PostMapping("/search/name")
-//    public Product findProductByName(@RequestBody SearchData searchData){
-//        return productService.findByProductName(searchData.getSearchKey());
-//    }
+
     @PostMapping("/{id}")
-    public void addSupplier(@RequestBody Suplier suplier, @PathVariable("id") Long productId){
+    public void addSupplier(@RequestBody Suplier suplier, @PathVariable("id") Long productId) {
         productService.addSupplier(suplier, productId);
+    }
+
+    @PostMapping("/search/name")
+    public Product findProductByName(@RequestBody SearchData searchData) {
+        return productService.findByProductName(searchData.getSearchKey());
+    }
+
+    @PostMapping("/search/nameProduct")
+    public Iterable<Product> findProduct(@RequestBody SearchData searchData) {
+        return productService.findProduct(searchData.getSearchKey());
+    }
+    
+    @GetMapping("/search/category/{categoryId}")
+    public Iterable<Product> getProductByCategory(@PathVariable("categoryId") Long categoryId){
+        return productService.findProductByCategory(categoryId);
+    }
+    
+    @GetMapping("/search/supplier/{supplierId}")
+    public List<Product> getProductBySupplier(@PathVariable("supplierId") Long supplierId){
+        return productService.findProductBySuplier(supplierId);
     }
 }

@@ -4,11 +4,14 @@
  */
 package com.maw.belajar.controllers;
 
+import com.maw.belajar.dto.Response;
 import com.maw.belajar.dto.ResponseData;
+import com.maw.belajar.dto.SearchData;
 import com.maw.belajar.dto.SuplierData;
 import com.maw.belajar.models.Suplier;
 import com.maw.belajar.service.SuplierService;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,7 +36,7 @@ public class SuplierController {
 
     @Autowired
     private SuplierService suplierService;
-    
+
     @Autowired
     private ModelMapper ModelMapper;
 
@@ -87,4 +90,33 @@ public class SuplierController {
         return ResponseEntity.ok(responseData);
     }
 
+    @PostMapping("search/email")
+    public Response<Suplier> findByEmail(@RequestBody SearchData searchData) {
+        Response<Suplier> response = new Response<>();
+        Suplier suplier = suplierService.findByEmail(searchData.getSearchKey());
+        if (suplier == null) {
+            response.setCode("50");
+            response.setMessage("Data Not Found");
+        } else {
+            response.setCode("00");
+            response.setMessage("Success");
+            response.setResponse(suplier);
+        }
+        return response;
+    }
+
+    @PostMapping("search/name")
+    public List<Suplier> findByName(@RequestBody SearchData searchData) {
+        return suplierService.findByName(searchData.getSearchKey());
+    }
+
+    @PostMapping("search/nameStart")
+    public List<Suplier> findByNameStart(@RequestBody SearchData searchData) {
+        return suplierService.findByNameStart(searchData.getSearchKey());
+    }
+
+    @PostMapping("search/nameOrEmail")
+    public List<Suplier> findByNameOrEmail(@RequestBody SearchData searchData) {
+        return suplierService.findByNameOrEmali(searchData.getSearchKey(), searchData.getOtherSearchKey());
+    }
 }

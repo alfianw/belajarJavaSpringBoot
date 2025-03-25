@@ -22,12 +22,13 @@ import java.util.Set;
  *
  * @author Hp
  */
+
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//         property = "id"
+//)
 @Entity
 @Table(name = "tbl_suplier")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-         property = "id"
-)
 public class Suplier implements Serializable {
 
     @Id
@@ -43,7 +44,7 @@ public class Suplier implements Serializable {
     @Column(length = 100, nullable = false, unique = true)
     private String email;
 
-//    @JsonBackReference
+    @JsonBackReference
     @ManyToMany(mappedBy = "supliers")
     private Set<Product> products;
 

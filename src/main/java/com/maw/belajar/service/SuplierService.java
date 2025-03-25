@@ -7,6 +7,7 @@ package com.maw.belajar.service;
 import com.maw.belajar.models.Suplier;
 import com.maw.belajar.repository.SuplierRepo;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,5 +42,21 @@ public class SuplierService {
 
     public void delete(Long id) {
         suplierRepo.deleteById(id);
+    }
+    
+    public Suplier findByEmail(String email){
+        return suplierRepo.findByEmail(email);
+    }
+    
+    public List<Suplier> findByName(String name){
+        return suplierRepo.findByNameContainsOrderByIdDesc(name);
+    }
+    
+    public List<Suplier> findByNameStart(String prefix){
+        return suplierRepo.findByNameStartingWith(prefix);
+    }
+    
+    public List<Suplier> findByNameOrEmali(String name,String email){
+        return suplierRepo.findByNameContainsOrEmailContains(name, email);
     }
 }
