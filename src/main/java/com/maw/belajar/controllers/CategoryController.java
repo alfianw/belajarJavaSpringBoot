@@ -6,11 +6,16 @@ package com.maw.belajar.controllers;
 
 import com.maw.belajar.dto.CategoryData;
 import com.maw.belajar.dto.ResponseData;
+import com.maw.belajar.dto.SearchData;
 import com.maw.belajar.models.Category;
 import com.maw.belajar.service.CategoryService;
 import jakarta.validation.Valid;
+import java.util.Arrays;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -33,7 +38,7 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
-    
+
     @Autowired
     private ModelMapper modelMapper;
 
@@ -89,5 +94,25 @@ public class CategoryController {
         responseData.getMessage().add("Success");
         responseData.setPayload(categoryService.create(category));
         return ResponseEntity.ok(responseData);
+    }
+
+    @PostMapping("search/{size}/{page}/{sort}")
+    public Iterable<Category> findByname(@RequestBody SearchData searchData, @PathVariable("size") int size,
+            @PathVariable("page") int page, @PathVariable("sort") String sort) {
+        
+        Pageable pageable = PageRequest.of(page,size, Sort.by("id"));
+        if(sort.equalsIgnoreCase("desc")){
+            pageable = PageRequest.of(page,size, Sort.by("id").descending());
+        }
+        return categoryService.findByName(searchData.getSearchKey(), pageable);
+    }
+    
+    @PostMapping("/batch")
+    public ResponseEntity<ResponseData<Iterable<Category>>> saveBatch(@RequestBody Category[] categorys){
+        ResponseData<Iterable<Category>> responseData = new ResponseData<>();
+        responseData.setPayload(categoryService.saveBatch(Arrays.asList(categorys)));
+        responseData.setCode("00");
+        responseData.getMessage().add("Success");
+        return  ResponseEntity.ok(responseData);
     }
 }

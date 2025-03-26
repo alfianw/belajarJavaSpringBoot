@@ -17,5 +17,4 @@ public class BelajarApplication {
         public ModelMapper modelMapper(){
             return new ModelMapper();
         }
-
 }

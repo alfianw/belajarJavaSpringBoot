@@ -9,6 +9,7 @@ import com.maw.belajar.repository.CategoryRepo;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -40,5 +41,13 @@ public class CategoryService {
     
     public void delete(Long id){
         categoryRepo.deleteById(id);
+    }
+    
+    public Iterable<Category> findByName(String categoryName, Pageable pageable){
+        return categoryRepo.findByCategoryNameContains(categoryName, pageable);
+    }
+    
+    public  Iterable<Category> saveBatch(Iterable<Category> categorys){
+        return categoryRepo.saveAll(categorys);
     }
 }
